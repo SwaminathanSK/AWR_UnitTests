@@ -48,7 +48,10 @@ class Actor(Model):
 
         return normal, action
 
-    def backward(self, loss):
+    def backward(self, loss, device='cuda'):
         self.optimiser.zero_grad()
-        loss.backward(t([1. for _ in range(loss.size()[0])]))
+        if device == 'cpu':
+            loss.backward(t([1. for _ in range(loss.size()[0])], device='cpu'))
+        else:
+            loss.backward(t([1. for _ in range(loss.size()[0])]))
         self.optimiser.step()
